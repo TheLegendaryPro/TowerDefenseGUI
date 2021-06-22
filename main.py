@@ -1,5 +1,4 @@
 import PySimpleGUI as sg
-import pyautogui
 
 import autosend
 import mouse
@@ -10,11 +9,10 @@ sg.theme('DarkAmber')  # Add a touch of color
 # All the stuff inside your window.
 layout = [
     [sg.Text("Welcome to TowerDefenseGUI")],
-    [sg.Button("Setup"), sg.Button("Test")],
+    [sg.Button("Setup"), sg.Button("How to setup?", key="setup_tutorial")],
     [sg.Button("INACTIVE", button_color="red", key="activate_button"), sg.Text("Timer: -1", key="timer_text")],
-    [sg.Button("Zombie"), sg.Button("Spider"), sg.Button("Skeleton"), sg.Button("SilverFish")]
+    [sg.Button("Zombie", button_color="red"), sg.Button("Spider"), sg.Button("Skeleton"), sg.Button("SilverFish")]
 ]
-
 
 # Create the Window
 window = sg.Window('Window Title', layout)
@@ -28,6 +26,13 @@ skeleton_button = window.find_element(key="Skeleton")
 silver_fish_button = window.find_element(key="SilverFish")
 
 
+def reset_mob_colors():
+    zombie_button.update(button_color="grey")
+    spider_button.update(button_color="grey")
+    skeleton_button.update(button_color="grey")
+    silver_fish_button.update(button_color="grey")
+
+
 is_active = False
 active_mob = "Zombie"
 timer = -1
@@ -35,11 +40,13 @@ timer = -1
 # get cache content
 # If file does not exist, create one
 # If file cannot be opened as JSON, empty it and put a empty json there
-global cache_content
+cache_content = {}
+already_setup = False
 try:
     with open("td_cache.json", mode="r") as td_cache:
         try:
             cache_content = json.load(td_cache)
+            already_setup = True
         except:
             cache_content = {}
             json.dump(cache_content, td_cache, indent=4)
@@ -47,6 +54,31 @@ except:
     with open("td_cache.json", mode="w+") as td_cache:
         cache_content = {}
         json.dump(cache_content, td_cache, indent=4)
+
+pos_matrix = []
+
+
+def update_pos_matrix():
+    global pos_matrix
+    pos_matrix = []
+    lrx_ = cache_content['inv_box_json']['lrx']
+    ulx_ = cache_content['inv_box_json']['ulx']
+    lry_ = cache_content['inv_box_json']['lry']
+    uly_ = cache_content['inv_box_json']['uly']
+    box_width = lrx_ - ulx_
+    box_height = lry_ - uly_
+    for row in range(4):
+        pos_matrix.append([])
+        row_height = uly_ + box_height / 4 * row + box_height / 8
+        for col in range(9):
+            col_width = ulx_ + box_width / 9 * col + box_width / 18
+            pos_matrix[row].append((col_width, row_height))
+
+
+update_pos_matrix()
+active_mob_xy = pos_matrix[0][2]
+send_xy = pos_matrix[3][8]
+
 
 while True:
     event, values = window.read(timeout=1000)
@@ -85,35 +117,28 @@ while True:
             cache_content['inv_box_json'] = inv_box_json
             json.dump(cache_content, td_cache, indent=4)
         window.UnHide()
-    elif event == "Test":
-        pos_matrix = []
-        lrx_ = cache_content['inv_box_json']['lrx']
-        ulx_ = cache_content['inv_box_json']['ulx']
-        lry_ = cache_content['inv_box_json']['lry']
-        uly_ = cache_content['inv_box_json']['uly']
-        box_width = lrx_ - ulx_
-        box_height = lry_ - uly_
-        for row in range(3):
-            pos_matrix.append([])
-            row_height = uly_ + box_height/3*row + box_height/6
-            for col in range(9):
-                col_width = ulx_ + box_width/9*col + box_width/18
-                pos_matrix[row].append((col_width, row_height))
-                pyautogui.click(col_width, row_height)
-                time.sleep(0.1)
+        update_pos_matrix()
     elif event == "Zombie":
-        pass
+        reset_mob_colors()
+        zombie_button.update(button_color="red")
+        active_mob_xy = pos_matrix[0][2]
     elif event == "Spider":
-        pass
+        reset_mob_colors()
+        spider_button.update(button_color="red")
+        active_mob_xy = pos_matrix[0][3]
     elif event == "Skeleton":
-        pass
+        reset_mob_colors()
+        skeleton_button.update(button_color="red")
+        active_mob_xy = pos_matrix[0][4]
     elif event == "SilverFish":
-        pass
-
+        reset_mob_colors()
+        silver_fish_button.update(button_color="red")
+        active_mob_xy = pos_matrix[1][2]
 
     if is_active:
         if timer == 0:
-            autosend.send_spider()
+            if already_setup:
+                autosend.send_troop(active_mob_xy, send_xy)
 
     # THINGS TO DO AT THE END
     if timer > 0:
