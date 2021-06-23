@@ -4,6 +4,7 @@ import autosend
 import mouse
 import json
 import time
+import winsound
 
 sg.theme('DarkAmber')  # Add a touch of color
 # All the stuff inside your window.
@@ -145,6 +146,14 @@ while True:
         timer -= 1
     elif timer == 0:
         timer = 16
+
+    # Play notes
+    if timer == 3:
+        winsound.Beep(293, 500)
+    elif timer == 2:
+        winsound.Beep(392, 500)
+    elif timer == 1:
+        winsound.Beep(261, 500)
 
     timer_text = window.find_element(key="timer_text")
     timer_text.update(value=f"Timer: {timer}")
