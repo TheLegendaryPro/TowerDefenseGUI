@@ -10,9 +10,8 @@ sg.theme('DarkAmber')  # Add a touch of color
 # All the stuff inside your window.
 layout = [
     [sg.Text("Welcome to TowerDefenseGUI")],
-    [sg.Button("Setup"), sg.Button("How to setup?", key="setup_tutorial")],
-    [sg.Button("INACTIVE", button_color="red", key="activate_button"), sg.Text("Timer: -1", key="timer_text")],
-    [sg.Button("Zombie", button_color="red"), sg.Button("Spider"), sg.Button("Skeleton"), sg.Button("SilverFish")]
+    [sg.Button("Setup"), sg.Button("INACTIVE", button_color="red", key="activate_button"), sg.Text("Timer: -1", key="timer_text")],
+    [sg.Button("Zombie", button_color="red"), sg.Button("Spider", button_color="grey"), sg.Button("Skeleton", button_color="grey"), sg.Button("SilverFish", button_color="grey")]
 ]
 
 # Create the Window
