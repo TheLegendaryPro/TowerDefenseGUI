@@ -13,7 +13,8 @@ windows 10
 5. open the inventory
 6. switch to the python window, click on setup, the python window will automatically disappear
 7. click on the two conner of the inventory according to the image below
-![where to click](https://github.com/TheLegendaryPro/TowerDefenseGUI/instruction.png?raw=true)
+
+![where to click](https://github.com/TheLegendaryPro/TowerDefenseGUI/blob/master/instruction.png?raw=true)
    
 8. you have successfully set up
 9. select the troop that you want to auto send
