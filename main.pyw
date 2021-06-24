@@ -10,7 +10,7 @@ sg.theme('DarkAmber')  # Add a touch of color
 # All the stuff inside your window.
 layout = [
     [sg.Text("Welcome to TowerDefenseGUI")],
-    [sg.Button("Setup"), sg.Button("INACTIVE", button_color="red", key="activate_button"), sg.Text("Timer: -1", key="timer_text")],
+    [sg.Button("Setup"), sg.Button("INACTIVE", button_color="red", key="activate_button"), sg.Text("Timer: -1", key="timer_text"), sg.Checkbox("Auto send", key="auto_send", default=True)],
     [sg.Button("Zombie", button_color="red"), sg.Button("Spider", button_color="grey"), sg.Button("Skeleton", button_color="grey"), sg.Button("SilverFish", button_color="grey")]
 ]
 
@@ -138,7 +138,9 @@ while True:
     if is_active:
         if timer == 0:
             if already_setup:
-                autosend.send_troop(active_mob_xy, send_xy)
+                if window.find_element(key="auto_send").get():
+                    # If the checkbox is checked
+                    autosend.send_troop(active_mob_xy, send_xy)
 
     # THINGS TO DO AT THE END
     if timer > 0:
@@ -148,11 +150,11 @@ while True:
 
     # Play notes
     if timer == 3:
-        winsound.Beep(293, 500)
+        winsound.Beep(293, 300)
     elif timer == 2:
-        winsound.Beep(392, 500)
+        winsound.Beep(392, 300)
     elif timer == 1:
-        winsound.Beep(261, 500)
+        winsound.Beep(261, 300)
 
     timer_text = window.find_element(key="timer_text")
     timer_text.update(value=f"Timer: {timer}")
