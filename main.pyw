@@ -46,7 +46,8 @@ try:
     with open("td_cache.json", mode="r") as td_cache:
         try:
             cache_content = json.load(td_cache)
-            already_setup = True
+            if 'inv_box_json' in cache_content:
+                already_setup = True
         except:
             cache_content = {}
             json.dump(cache_content, td_cache, indent=4)
@@ -56,6 +57,7 @@ except:
         json.dump(cache_content, td_cache, indent=4)
 
 pos_matrix = []
+
 
 
 def update_pos_matrix():
@@ -74,10 +76,10 @@ def update_pos_matrix():
             col_width = ulx_ + box_width / 9 * col + box_width / 18
             pos_matrix[row].append((col_width, row_height))
 
-
-update_pos_matrix()
-active_mob_xy = pos_matrix[0][2]
-send_xy = pos_matrix[3][8]
+if already_setup:
+    update_pos_matrix()
+    active_mob_xy = pos_matrix[0][2]
+    send_xy = pos_matrix[3][8]
 
 
 while True:
