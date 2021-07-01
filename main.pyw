@@ -63,18 +63,21 @@ pos_matrix = []
 def update_pos_matrix():
     global pos_matrix
     pos_matrix = []
-    lrx_ = cache_content['inv_box_json']['lrx']
-    ulx_ = cache_content['inv_box_json']['ulx']
-    lry_ = cache_content['inv_box_json']['lry']
-    uly_ = cache_content['inv_box_json']['uly']
-    box_width = lrx_ - ulx_
-    box_height = lry_ - uly_
-    for row in range(4):
-        pos_matrix.append([])
-        row_height = uly_ + box_height / 4 * row + box_height / 8
-        for col in range(9):
-            col_width = ulx_ + box_width / 9 * col + box_width / 18
-            pos_matrix[row].append((col_width, row_height))
+    try:
+        lrx_ = cache_content['inv_box_json']['lrx']
+        ulx_ = cache_content['inv_box_json']['ulx']
+        lry_ = cache_content['inv_box_json']['lry']
+        uly_ = cache_content['inv_box_json']['uly']
+        box_width = lrx_ - ulx_
+        box_height = lry_ - uly_
+        for row in range(4):
+            pos_matrix.append([])
+            row_height = uly_ + box_height / 4 * row + box_height / 8
+            for col in range(9):
+                col_width = ulx_ + box_width / 9 * col + box_width / 18
+                pos_matrix[row].append((col_width, row_height))
+    except:
+        pass
 
 if already_setup:
     update_pos_matrix()
